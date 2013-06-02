@@ -1,0 +1,6 @@
+## Providers for admin actions
+# Server-level
+# Application-level
+clime.messadmin.providers.quartz.QuartzStatistics
+# Session-level
+# Miscellaneous
