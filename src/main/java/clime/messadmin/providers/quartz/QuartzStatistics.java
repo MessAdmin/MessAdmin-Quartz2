@@ -157,7 +157,7 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 				String urlPause = urlPrefix + QUARTZ_ACTION_SCHEDULER_STANDBY;
 				out.append(buildActionLink(urlPause, I18NSupport.getLocalizedMessage(BUNDLE_NAME, "action.scheduler.pause"), this));//$NON-NLS-1$
 			}
-			out.append("&nbsp;");//$NON-NLS-1$
+			out.append("&nbsp;&nbsp;");//$NON-NLS-1$
 			// TODO link to shutdown()?
 			// link to "clear" clear()
 			String urlClear = urlPrefix + QUARTZ_ACTION_SCHEDULER_CLEAR;
