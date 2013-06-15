@@ -24,7 +24,6 @@ import clime.messadmin.i18n.I18NSupport;
 import clime.messadmin.providers.spi.BaseTabularDataProvider;
 import clime.messadmin.providers.spi.DisplayProvider;
 import clime.messadmin.utils.DateUtils;
-import clime.messadmin.utils.Integers;
 import clime.messadmin.utils.StringUtils;
 
 /**
@@ -96,7 +95,7 @@ abstract class AbstractQuartzTable extends BaseTabularDataProvider {
 		}
 		result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "job.extraInfo",//$NON-NLS-1
 				new Object[] {
-			jobClass, Integers.valueOf(nTriggers)
+			jobClass, Integer.valueOf(nTriggers)
 		});
 		return result;
 	}

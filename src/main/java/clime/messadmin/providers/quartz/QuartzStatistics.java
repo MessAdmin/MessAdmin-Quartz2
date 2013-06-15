@@ -31,7 +31,6 @@ import clime.messadmin.admin.BaseAdminActionWithContext;
 import clime.messadmin.i18n.I18NSupport;
 import clime.messadmin.model.Server;
 import clime.messadmin.providers.spi.ApplicationDataProvider;
-import clime.messadmin.utils.Integers;
 import clime.messadmin.utils.StringUtils;
 
 /**
@@ -42,7 +41,7 @@ import clime.messadmin.utils.StringUtils;
  * TODO pauseAll(), resumeAll(), pause/resume JobGroup/TriggerGroup
  * TODO see org.quartz.plugins.history.LoggingJobHistoryPlugin and org.quartz.plugins.history.LoggingTriggerHistoryPlugin for creating a time log of events
  *
- * @since MessAdmin 5.0
+ * @since MessAdmin 5.4
  * @author C&eacute;drik LIME
  */
 public class QuartzStatistics extends BaseAdminActionWithContext implements ApplicationDataProvider, AdminActionProvider {
@@ -91,7 +90,7 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 		schedulers.addAll(SpringQuartzUtils.getSchedulerFactoryBeans(context));
 		schedulers.addAll(SchedulerRepository.getInstance().lookupAll());
 		return I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "title", new Object[] {//$NON-NLS-1$
-				Integers.valueOf(schedulers.size())
+				Integer.valueOf(schedulers.size())
 		});
 	}
 
