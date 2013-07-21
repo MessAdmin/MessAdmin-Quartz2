@@ -78,7 +78,7 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 	/** {@inheritDoc} */
 	@Override
 	public int getPriority() {
-		return 1000;
+		return 100;
 	}
 
 	/***********************************************************************/
