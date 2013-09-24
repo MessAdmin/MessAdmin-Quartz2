@@ -12,24 +12,20 @@ import javax.servlet.ServletContext;
 
 import org.quartz.Scheduler;
 
+import clime.messadmin.utils.SpringUtils;
+
 /**
  * @author C&eacute;drik LIME
  */
 final class SpringQuartzUtils {
 
-	private static transient Method getWebApplicationContext;
 	private static transient Class<?> schedulerFactoryBeanClass;
-	private static transient Method getBeansOfType;
 	private static transient Method getObject;
 	private static transient Method isRunning;
 
 	static {
 		try {
-			Class<?> webApplicationContextUtilsClass = Class.forName("org.springframework.web.context.support.WebApplicationContextUtils");
-			getWebApplicationContext = webApplicationContextUtilsClass.getMethod("getWebApplicationContext", ServletContext.class);
-			Class<?> webApplicationContextClass = Class.forName("org.springframework.web.context.WebApplicationContext");
 			schedulerFactoryBeanClass = Class.forName("org.springframework.scheduling.quartz.SchedulerFactoryBean");
-			getBeansOfType = webApplicationContextClass.getMethod("getBeansOfType", Class.class);
 			getObject = schedulerFactoryBeanClass.getMethod("getObject");
 			// @since Spring 2.0; note that Quartz 2 requires Spring 3.1
 			isRunning = schedulerFactoryBeanClass.getMethod("isRunning");
@@ -48,8 +44,7 @@ final class SpringQuartzUtils {
 		//WebApplicationContext webContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		//Map/*<String, SchedulerFactoryBean>*/ schedulerBeans = webContext.getBeansOfType(SchedulerFactoryBean.class);
 		try {
-			Object webContext = getWebApplicationContext.invoke(null, context);
-			schedulerBeans = (Map) getBeansOfType.invoke(webContext, schedulerFactoryBeanClass);
+			schedulerBeans = SpringUtils.beansOfTypeIncludingAncestors(context, schedulerFactoryBeanClass);
 		} catch (Exception ignore) {
 		}
 		return schedulerBeans.values();
