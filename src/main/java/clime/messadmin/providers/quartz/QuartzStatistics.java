@@ -85,13 +85,13 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 
 	/** {@inheritDoc} */
 	public String getApplicationDataTitle(ServletContext context) {
-		final ClassLoader cl = Server.getInstance().getApplication(context).getApplicationInfo().getClassLoader();
+		final ClassLoader cl = I18NSupport.getClassLoader(context);
 		Set<Object> schedulers = new HashSet<Object>();
 		schedulers.addAll(SpringQuartzUtils.getSchedulerFactoryBeans(context));
 		schedulers.addAll(SchedulerRepository.getInstance().lookupAll());
-		return I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "title", new Object[] {//$NON-NLS-1$
+		return I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "title",//$NON-NLS-1$
 				Integer.valueOf(schedulers.size())
-		});
+		);
 	}
 
 	/** {@inheritDoc} */
@@ -138,6 +138,7 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 	}
 
 	private void dump(StringBuffer out, ServletContext context, Scheduler scheduler) {
+		ClassLoader cl = I18NSupport.getClassLoader(context);
 		try {
 			// scheduler Summary
 			out.append("<pre>").append(StringUtils.escapeXml(scheduler.getMetaData().getSummary())).append("</pre>");//$NON-NLS-1$//$NON-NLS-2$
@@ -150,17 +151,17 @@ public class QuartzStatistics extends BaseAdminActionWithContext implements Appl
 				//TODO -> gray all jobs/triggers, since no firing
 				// link to "resume" start()
 				String urlResume = urlPrefix + QUARTZ_ACTION_SCHEDULER_START;
-				out.append(buildActionLink(urlResume, I18NSupport.getLocalizedMessage(BUNDLE_NAME, "action.scheduler.resume"), this));//$NON-NLS-1$
+				out.append(buildActionLink(urlResume, I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "action.scheduler.resume"), this));//$NON-NLS-1$
 			} else {
 				// link to "pause" standby()
 				String urlPause = urlPrefix + QUARTZ_ACTION_SCHEDULER_STANDBY;
-				out.append(buildActionLink(urlPause, I18NSupport.getLocalizedMessage(BUNDLE_NAME, "action.scheduler.pause"), this));//$NON-NLS-1$
+				out.append(buildActionLink(urlPause, I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "action.scheduler.pause"), this));//$NON-NLS-1$
 			}
 			out.append("&nbsp;&nbsp;");//$NON-NLS-1$
 			// TODO link to shutdown()?
 			// link to "clear" clear()
 			String urlClear = urlPrefix + QUARTZ_ACTION_SCHEDULER_CLEAR;
-			out.append(buildActionLink(urlClear, I18NSupport.getLocalizedMessage(BUNDLE_NAME, "action.scheduler.clear"), I18NSupport.getLocalizedMessage(BUNDLE_NAME, "action.scheduler.clear.confirmJS"), this));//$NON-NLS-1$//$NON-NLS-2$
+			out.append(buildActionLink(urlClear, I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "action.scheduler.clear"), I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "action.scheduler.clear.confirmJS"), this));//$NON-NLS-1$//$NON-NLS-2$
 			List<JobExecutionContext> currentlyExecutingJobs = scheduler.getCurrentlyExecutingJobs();
 			// Triggers: scheduler.getTriggerGroupNames();
 			new QuartzTriggerTable(context, this).getXHTMLData(out, scheduler);

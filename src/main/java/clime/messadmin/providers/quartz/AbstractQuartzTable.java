@@ -34,6 +34,7 @@ abstract class AbstractQuartzTable extends BaseTabularDataProvider {
 	protected static final String BUNDLE_NAME = QuartzStatistics.class.getName();
 
 	protected ServletContext servletContext;
+	protected ClassLoader cl;
 	protected DisplayProvider displayProvider;
 
 	/**
@@ -43,6 +44,7 @@ abstract class AbstractQuartzTable extends BaseTabularDataProvider {
 		super();
 		this.servletContext = servletContext;
 		this.displayProvider = displayProvider;
+		this.cl = I18NSupport.getClassLoader(servletContext);
 	}
 
 	protected final String urlEncodeUTF8(String url) {
@@ -93,10 +95,9 @@ abstract class AbstractQuartzTable extends BaseTabularDataProvider {
 			nTriggers = triggersOfJob.size();
 		} catch (SchedulerException ignore) {
 		}
-		result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "job.extraInfo",//$NON-NLS-1
-				new Object[] {
-			jobClass, Integer.valueOf(nTriggers)
-		});
+		result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "job.extraInfo",//$NON-NLS-1
+				jobClass, Integer.valueOf(nTriggers)
+		);
 		return result;
 	}
 
@@ -107,42 +108,38 @@ abstract class AbstractQuartzTable extends BaseTabularDataProvider {
 			CronTrigger cTrigger = (CronTrigger) trigger;
 			String cronExpression = cTrigger.getCronExpression();//cTrigger.getExpressionSummary();
 			String timeZone = cTrigger.getTimeZone().getID();
-			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "trigger.extraInfo."+CronTrigger.class.getName(),//$NON-NLS-1
-					new Object[] {
-				triggerClass, cronExpression, timeZone
-			});
+			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "trigger.extraInfo."+CronTrigger.class.getName(),//$NON-NLS-1
+					triggerClass, cronExpression, timeZone
+			);
 		} else if (SimpleTrigger.class.isInstance(trigger)) {
 			SimpleTrigger sTrigger = (SimpleTrigger) trigger;
 			int repeatCount = sTrigger.getRepeatCount();
 			long repeatInterval = sTrigger.getRepeatInterval();
 			int timesTriggered = sTrigger.getTimesTriggered();
-			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "trigger.extraInfo."+SimpleTrigger.class.getName(),//$NON-NLS-1
-					new Object[] {
-				triggerClass, DateUtils.timeIntervalToFormattedString(repeatInterval), repeatCount, timesTriggered
-			});
+			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "trigger.extraInfo."+SimpleTrigger.class.getName(),//$NON-NLS-1
+					triggerClass, DateUtils.timeIntervalToFormattedString(repeatInterval), repeatCount, timesTriggered
+			);
 		} else if (CalendarIntervalTrigger.class.isInstance(trigger)) {
 			CalendarIntervalTrigger ciTrigger = (CalendarIntervalTrigger) trigger;
 			int repeatInterval = ciTrigger.getRepeatInterval();
 			IntervalUnit repeatIntervalUnit = ciTrigger.getRepeatIntervalUnit();
 			//String timeZone = ciTrigger.getTimeZone().getID(); //TODO Quartz 2.1
 			int timesTriggered = ciTrigger.getTimesTriggered();
-			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "trigger.extraInfo."+"org.quartz.CalendarIntervalTrigger",//NON-NLS-2
-						new Object[] {
+			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "trigger.extraInfo."+"org.quartz.CalendarIntervalTrigger",//NON-NLS-2
 					triggerClass, repeatInterval, repeatIntervalUnit
-			});
+			);
 		} else if (QuartzUtils.isDailyTimeIntervalTrigger(trigger)) {//@since Quartz 2.1
 			Set<Integer> daysOfWeek = QuartzUtils.getDailyTimeIntervalTrigger_DaysOfWeek(trigger);
 			Object startTimeOfDay = QuartzUtils.getDailyTimeIntervalTrigger_StartTimeOfDay(trigger);
 			Object endTimeOfDay = QuartzUtils.getDailyTimeIntervalTrigger_EndTimeOfDay(trigger);
 			String repeatInterval = QuartzUtils.getDailyTimeIntervalTrigger_RepeatInterval(trigger);
 			Object repeatIntervalUnit = QuartzUtils.getDailyTimeIntervalTrigger_RepeatIntervalUnit(trigger);
-			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, "trigger.extraInfo.DailyTimeIntervalTrigger",//$NON-NLS-1
-					new Object[] {
-				triggerClass,
-				repeatInterval, repeatIntervalUnit,
-				startTimeOfDay, endTimeOfDay,
-				daysOfWeek
-			});
+			result = I18NSupport.getLocalizedMessage(BUNDLE_NAME, cl, "trigger.extraInfo.DailyTimeIntervalTrigger",//$NON-NLS-1
+					triggerClass,
+					repeatInterval, repeatIntervalUnit,
+					startTimeOfDay, endTimeOfDay,
+					daysOfWeek
+			);
 		}
 		// DateIntervalTrigger and NthIncludedDayTrigger are deprecated, and moved in the quartz-backward-compat package
 		return result;
