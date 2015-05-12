@@ -79,6 +79,10 @@ class QuartzTriggerTable extends AbstractQuartzTable {
 			Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.groupEquals(triggerGroupName));
 			for (TriggerKey triggerKey : triggerKeys) {
 				Trigger trigger = scheduler.getTrigger(triggerKey);
+				if (trigger == null) {
+					// trigger disappeared between set construction and exploitation
+					continue;
+				}
 //				assert triggerName.equals(trigger.getName());
 //				assert triggerGroupName.equals(trigger.getGroup());
 				JobDetail jobDetail = scheduler.getJobDetail(trigger.getJobKey());
